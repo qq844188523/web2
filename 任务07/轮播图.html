@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>轮播图</title>
+	<script src="js/animate.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="bbox">
+		<div class="tbox">
+			<div class="lbox"><img src="images/a15.png"></div>
+			<div class="cbox">
+				<div class="sbox" id="sbox"><p>[温馨提示]最近有不少不法分子在网上骗人，请大家注意!!!</p></div>
+			</div>
+			<div class="rbox"></div>
+		</div>
+		<div class="box" id="box">
+		<div class="slider" id="slider">
+			<div class="slide"><img src="images/b5.png"></div>
+			<div class="slide"><img src="images/b1.png"></div>
+			<div class="slide"><img src="images/b2.png"></div>
+			<div class="slide"><img src="images/b3.png"></div>
+			<div class="slide"><img src="images/b4.png"></div>
+			<div class="slide"><img src="images/b5.png"></div>
+			<div class="slide"><img src="images/b1.png"></div>
+		</div>
+			<span id="left"><</span>
+			<span id="right">></span>
+			<ul class="nav" id="nav">
+				<li class="active">1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+				<li>5</li>
+			</ul>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var box = document.getElementById('box');
+		var oNavlist = document.getElementById('nav').children;
+		var slider = document.getElementById('slider');
+		var left = document.getElementById('left');
+		var right = document.getElementById('right');
+		var sbox = document.getElementById('sbox');
+		var index = 1;
+		var timer;
+		var isMoving = false;
+		window.onload = function(){
+			setInterval(function(){
+				var now = parseInt(getStyle(sbox,'right'));
+				if (now==1100) {
+					sbox.style.right = -200+'px';
+				}else{
+					sbox.style.right = now+1+'px';
+				}
+			},20);
+		}
+		function next (){
+			if (!isMoving) {
+				isMoving = true;
+				index++;
+				navChange();
+				animate(slider,{left:-1200*index},function (){
+					if (index === 6) {
+						slider.style.left = "-1200px";
+						index = 1;
+					}
+					isMoving = false;
+				});
+			}		
+		}
+		function prev (){
+			if (!isMoving) {
+				isMoving = true;
+				index--;
+				navChange();
+				animate(slider,{left:-1200*index},function (){
+					if (index === 0) {
+						slider.style.left = "-6000px";
+						index = 5;
+					}
+					isMoving = false;
+				});
+			}			
+		}
+		var timer = setInterval(next,3000);
+		box.onmouseover = function(){
+			animate(left,{opacity:50});
+			animate(right,{opacity:50});
+			clearInterval(timer);
+		}
+		box.onmouseout = function(){
+			animate(left,{opacity:0});
+			animate(right,{opacity:0});
+			timer = setInterval(next,3000);
+		}
+		right.onclick = next;
+		left.onclick = prev;
+		for (var i = 0; i <oNavlist.length; i++) {
+			oNavlist[i].idx = i;
+			oNavlist[i].onclick = function (){
+				index = this.idx+1;
+				navChange();
+				animate(slider,{left:-1200*index});
+			}
+		}
+		function navChange(){
+			for (var i = 0; i <oNavlist.length; i++) {
+				oNavlist[i].className = '';
+			}
+			if (index===6) {
+				oNavlist[0].className = 'active';
+			}else if(index===0){
+				oNavlist[4].className = 'active';
+			}else{
+				oNavlist[index-1].className = 'active';
+			}
+		}
+	</script>
+</body>
+</html>
